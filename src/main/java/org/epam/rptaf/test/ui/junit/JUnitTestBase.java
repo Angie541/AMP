@@ -1,27 +1,28 @@
-package org.epam.rptaf.test.ui;
+package org.epam.rptaf.test.ui.junit;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 
-public abstract class UiTestBase {
+public class JUnitTestBase {
+
     protected WebDriver driver;
 
-    @BeforeClass(alwaysRun = true)
-    public void setUpClass(){
+    @BeforeClass
+    public static void setUpClass(){
         WebDriverManager.chromedriver().setup();
     }
 
-    @BeforeMethod(alwaysRun = true)
-    public void setUpMethod() {
+    @Before
+    public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @After
     public void closeBrowser() {
         driver.quit();
     }
