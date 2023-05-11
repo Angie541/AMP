@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static org.epam.rptaf.core.util.UiTestUtil.findElement;
+
 public class LaunchesPage extends AbstractBasePage {
     private static final String LAUNCHES_PAGE_LAYOUT = "//div[@class='pageLayout__page-content--2R36V'][1]";
     private static final String ENTER_NAME_FIELD = "//input[@placeholder='Enter name']";
@@ -23,27 +25,28 @@ public class LaunchesPage extends AbstractBasePage {
 
     @Step
     public boolean isVisible() {
-        WebElement layout = new WebDriverWait(driver, Duration.ofSeconds(100))
+        WebElement layout = new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(LAUNCHES_PAGE_LAYOUT)));
         return layout.isDisplayed();
     }
 
     @Step
     public LaunchesPage enterFilterValue(String filterValue) {
-        getEnterNameField().click();
-        getEnterNameField().sendKeys(filterValue);
+        WebElement enterNameField = findElement(driver, ENTER_NAME_FIELD);
+        enterNameField.click();
+        enterNameField.sendKeys(filterValue);
         return this;
     }
 
     @Step
     public LaunchesPage clickOnSaveButton() {
-        driver.findElement(By.xpath(SAVE_BUTTON)).click();
+        findElement(driver, SAVE_BUTTON).click();
         return this;
     }
 
     @Step
     public LaunchesPage nameNewFilter(String filterName) {
-        WebElement editFilterNameField = driver.findElement(By.xpath(EDIT_FILTER_NAME_FIELD));
+        WebElement editFilterNameField = findElement(driver, EDIT_FILTER_NAME_FIELD);
         editFilterNameField.click();
         editFilterNameField.clear();
         editFilterNameField.sendKeys(filterName);
@@ -52,25 +55,19 @@ public class LaunchesPage extends AbstractBasePage {
 
     @Step
     public LaunchesPage clickOnAddButton() {
-        driver.findElement(By.xpath(ADD_FILTER_BUTTON)).click();
+        findElement(driver, ADD_FILTER_BUTTON).click();
         return this;
     }
 
     @Step
     public String getFilterValue() {
-        new WebDriverWait(driver, Duration.ofSeconds(1000))
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(ENTER_NAME_FIELD)));
-        return getEnterNameField().getAttribute("value");
+        return findElement(driver, ENTER_NAME_FIELD).getAttribute("value");
     }
 
     @Step
     public boolean isFilterDisplayed(String filterName) {
         String filterXpath = String.format(NEW_FILTER_ICON, filterName);
-        return driver.findElement(By.xpath(filterXpath)).isDisplayed();
-    }
-
-    private WebElement getEnterNameField() {
-        return driver.findElement(By.xpath(ENTER_NAME_FIELD));
+        return findElement(driver, filterXpath).isDisplayed();
     }
 
 }

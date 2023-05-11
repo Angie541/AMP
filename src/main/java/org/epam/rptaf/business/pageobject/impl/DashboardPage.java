@@ -18,7 +18,7 @@ public class DashboardPage extends AbstractBasePage {
 
     @Step
     public boolean isVisible() {
-        WebElement layout = new WebDriverWait(driver, Duration.ofSeconds(100))
+        WebElement layout = new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DASHBOARD_PAGE_LAYOUT)));
         return layout.isDisplayed();
     }
