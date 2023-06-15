@@ -1,82 +1,109 @@
 package org.epam.rptaf.core.api.client;
 
+import static io.restassured.RestAssured.given;
+import static org.epam.rptaf.test.api.ApiTestUtil.AUTH_BEARER;
+import static org.epam.rptaf.test.api.ApiTestUtil.FILTER_PATH;
+import static org.epam.rptaf.test.api.ApiTestUtil.getMapperLambda;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
+import org.epam.rptaf.core.api.dto.FilterCreateResponseDto;
 import org.epam.rptaf.core.api.dto.FilterDto;
+import org.epam.rptaf.core.api.dto.FilterUpdateResponseDto;
 import org.epam.rptaf.core.api.dto.FiltersDto;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 
-import static io.restassured.RestAssured.given;
-import static org.epam.rptaf.test.api.ApiTestUtil.*;
-
-public class RestAssuredClient {
+public class RestAssuredClient implements HttpClient {
 
     public RestAssuredClient(String baseUrl) {
         RestAssured.baseURI = baseUrl;
     }
 
-    public Response sendFilterPost(FilterDto requestDto) {
+    @Override
+    public FilterCreateResponseDto sendFilterPost(FilterDto filterDto) {
         return given()
                 .auth().oauth2(AUTH_BEARER)
                 .when()
                 .contentType(ContentType.JSON)
-                .body(requestDto, getMapperLambda()) //serialization
-                .post(FILTER_PATH);
+                .body(filterDto, getMapperLambda()) //serialization
+                .post(FILTER_PATH)
+                .then()
+                .statusCode(statusChecker())
+                .extract()
+                .body()
+                .as(FilterCreateResponseDto.class, getMapperLambda()); //deserialization
     }
 
-    public ValidatableResponse sendFilterDelete(int filterId) {
-        return given()
+    @Override
+    public void sendFilterDelete(int filterId) {
+        given()
                 .auth().oauth2(AUTH_BEARER)
                 .when()
                 .delete(FILTER_PATH + filterId)
-                .then();
+                .then()
+                .statusCode(statusChecker());
     }
 
+    @Override
     public FiltersDto sendFiltersGet() {
         return given()
                 .auth().oauth2(AUTH_BEARER)
                 .when()
                 .get(FILTER_PATH)
                 .then()
-                .statusCode(200)
+                .statusCode(statusChecker())
                 .contentType(ContentType.JSON)
                 .extract()
                 .body()
                 .as(FiltersDto.class, getMapperLambda()); //deserialization
     }
 
-    public ValidatableResponse sendFilterGet(int filterId) {
+    @Override
+    public FilterDto sendFilterGet(int filterId) {
         return given()
                 .auth().oauth2(AUTH_BEARER)
                 .when()
                 .get(FILTER_PATH + filterId)
-                .then();
-    }
-
-    public FiltersDto sendOwnFiltersGet() {
-        return given()
-                .auth().oauth2(AUTH_BEARER)
-                .when()
-                .get(FILTER_PATH + "own")
                 .then()
-                .statusCode(200)
+                .statusCode(statusChecker())
                 .contentType(ContentType.JSON)
                 .extract()
                 .body()
-                .as(FiltersDto.class, getMapperLambda()); //deserialization
+                .as(FilterDto.class, getMapperLambda()); //deserialization
     }
 
-    public FiltersDto sendSharedFiltersGet() {
+    @Override
+    public FilterUpdateResponseDto sendFilterPut(int filterId, FilterDto filterDto) {
         return given()
                 .auth().oauth2(AUTH_BEARER)
                 .when()
-                .get(FILTER_PATH + "shared")
-                .then()
-                .statusCode(200)
                 .contentType(ContentType.JSON)
+                .body(filterDto, getMapperLambda()) //serialization
+                .put(FILTER_PATH + filterId)
+                .then()
+                .statusCode(statusChecker())
                 .extract()
                 .body()
-                .as(FiltersDto.class, getMapperLambda()); //deserialization
+                .as(FilterUpdateResponseDto.class, getMapperLambda()); //deserialization
+    }
+
+    private Matcher<Integer> statusChecker() {
+        return new BaseMatcher<>() {
+            @Override
+            public void describeTo(Description description) {
+            }
+
+            @Override
+            public boolean matches(Object o) {
+                int statusCode = (int) o;
+                if (statusCode >= 200 && statusCode <= 399) {
+                    return true;
+                } else {
+                    throw new HttpClientException(statusCode);
+                }
+            }
+        };
     }
 }

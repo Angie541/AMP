@@ -3,7 +3,11 @@ package org.epam.rptaf.test.api;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.internal.mapping.Jackson2Mapper;
+import java.util.List;
 import lombok.experimental.UtilityClass;
+import org.epam.rptaf.core.api.dto.ConditionDto;
+import org.epam.rptaf.core.api.dto.FilterDto;
+import org.epam.rptaf.core.api.dto.OrderDto;
 
 @UtilityClass
 public class ApiTestUtil {
@@ -22,5 +26,23 @@ public class ApiTestUtil {
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
         return objectMapper;
+    }
+
+    public static FilterDto getFilterDto() {
+        ConditionDto conditionDto = new ConditionDto()
+                .setCondition("cnt")
+                .setFilteringField("name")
+                .setValue("name");
+
+        OrderDto orderDto = new OrderDto()
+                .setAsc(true)
+                .setSortingColumn("name");
+
+        return new FilterDto()
+                .setConditions(List.of(conditionDto))
+                .setName("demo")
+                .setOrders(List.of(orderDto))
+                .setShare(true)
+                .setType("Launch");
     }
 }
