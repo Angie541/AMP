@@ -11,7 +11,7 @@ import org.epam.rptaf.core.api.dto.OrderDto;
 
 @UtilityClass
 public class ApiTestUtil {
-    public static final String AUTH_BEARER = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY2NjQwMjcsInVzZXJfbmFtZSI6InN1cGVyYWRtaW4iLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOSVNUUkFUT1IiXSwianRpIjoiMjM3ZjhlOGMtMjQ0NS00MjY0LThmYjgtNmM1MThlZGRkYWFhIiwiY2xpZW50X2lkIjoidWkiLCJzY29wZSI6WyJ1aSJdfQ.DNjckL0CUZ4Ugp6cnPqo91Dc0EfpEMbkX-LttArys3I";
+    public static final String AUTH_BEARER = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY4NjM5OTYsInVzZXJfbmFtZSI6InN1cGVyYWRtaW4iLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOSVNUUkFUT1IiXSwianRpIjoiYWY0OWM1OGEtM2FkZi00YzMyLTk0YjYtODg1OTU5Y2Q1ODIwIiwiY2xpZW50X2lkIjoidWkiLCJzY29wZSI6WyJ1aSJdfQ.pY_6DtoPGXl3ZK1DjGugjleeLubLxnUTJVITU_Dlbd0";
     public static final String PROJECT = "/API_FILTERS_PROJECT";
     public static final String FILTER_PATH = PROJECT + "/filter/";
     private static ObjectMapper objectMapper;
