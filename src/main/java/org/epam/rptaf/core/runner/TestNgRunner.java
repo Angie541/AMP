@@ -1,5 +1,7 @@
 package org.epam.rptaf.core.runner;
 
+import org.epam.rptaf.test.api.FilterApacheTest;
+import org.epam.rptaf.test.api.FilterRestAssuredTest;
 import org.epam.rptaf.test.ui.AddNewFilterTest;
 import org.epam.rptaf.test.ui.EditFilterNameTest;
 import org.epam.rptaf.test.ui.LoginTest;
@@ -16,7 +18,9 @@ public class TestNgRunner {
         testngRunner.setTestClasses(new Class[]{
                 LoginTest.class,
                 EditFilterNameTest.class,
-                AddNewFilterTest.class
+                AddNewFilterTest.class,
+                FilterRestAssuredTest.class,
+                FilterApacheTest.class
         });
         //Run tests
         testngRunner.run();
